@@ -160,7 +160,7 @@ void BasicLightManager::activate( SceneManager *sceneManager )
 {
    Parent::activate( sceneManager );
 
-   if( GFX->getAdapterType() == OpenGL )
+   if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
    {
       #if defined( TORQUE_OPENGL ) 
          FEATUREMGR->registerFeature( MFT_LightMap, new LightmapFeatGLSL );

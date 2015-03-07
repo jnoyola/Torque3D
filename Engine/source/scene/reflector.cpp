@@ -812,7 +812,7 @@ MatrixF PlaneReflector::getFrustumClipProj( MatrixF &modelview )
    Vector4F c = clipPlane * a;
 
    // CodeReview [ags 1/23/08] Come up with a better way to deal with this.
-   if(GFX->getAdapterType() == OpenGL)
+   if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
       c.z += 1.0f;
 
    // Replace the third column of the projection matrix

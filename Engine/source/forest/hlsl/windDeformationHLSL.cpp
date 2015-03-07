@@ -40,7 +40,7 @@
 
 static void _onRegisterFeatures( GFXAdapterType type )
 {
-   if ( type == OpenGL )
+   if (GFXAdapter_isOpenGL(type))
       return;
 
    FEATUREMGR->registerFeature( MFT_WindEffect, new WindDeformationHLSL );

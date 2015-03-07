@@ -37,7 +37,7 @@ namespace
 {
    void register_glsl_shader_features_for_terrain(GFXAdapterType type)
    {
-      if(type != OpenGL)
+      if (!GFXAdapter_isOpenGL(type))
          return;
 
       FEATUREMGR->registerFeature( MFT_TerrainBaseMap, new TerrainBaseMapFeatGLSL );

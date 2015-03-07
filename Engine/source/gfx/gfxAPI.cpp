@@ -40,7 +40,8 @@ END_IMPLEMENT_STRUCT;
 ImplementEnumType( GFXAdapterType,
    "Back-end graphics API used by the GFX subsystem.\n\n"
    "@ingroup GFX" )
-   { OpenGL, "OpenGL", "OpenGL." },
+   { OpenGL32, "OpenGL32", "OpenGL 3.2." },
+   { OpenGL21, "OpenGL21", "OpenGL 2.1 fallback." },
    { Direct3D8, "D3D8", "Direct3D 8." },
    { Direct3D9, "D3D9", "Direct3D 9." },
    { NullDevice, "NullDevice", "Null device for dedicated servers." },

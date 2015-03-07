@@ -245,13 +245,20 @@ GFXShader* ShaderData::_createShader( const Vector<GFXShaderMacro> &macros )
          break;
       }
 
-      case OpenGL:
+      case OpenGL32:
       {
          success = shader->init( mOGLVertexShaderName,
                                  mOGLPixelShaderName,
                                  pixver,
                                  macros,
                                  samplers);
+         break;
+      }
+
+      case OpenGL21:
+      {
+         // TODO gl 2.1 shaders (GLSL 120)
+         AssertFatal(false, "OpenGL 2.1 shaders are not implemented yet.");
          break;
       }
          

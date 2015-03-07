@@ -89,7 +89,7 @@ void GFXGLDevice::enumerateAdapters( Vector<GFXAdapter*> &adapterList )
    WNDCLASS windowclass;
    dMemset( &windowclass, 0, sizeof( WNDCLASS ) );
 
-   windowclass.lpszClassName = L"GFX-OpenGL";
+   windowclass.lpszClassName = L"GFX-OpenGL32";
    windowclass.style         = CS_OWNDC;
    windowclass.lpfnWndProc   = DefWindowProc;
    windowclass.hInstance     = winState.appInstance;
@@ -98,7 +98,7 @@ void GFXGLDevice::enumerateAdapters( Vector<GFXAdapter*> &adapterList )
       AssertFatal( false, "Failed to register the window class for the GL test window." );
 
    // Now create a window
-   HWND hwnd = CreateWindow( L"GFX-OpenGL", L"", WS_POPUP, 0, 0, 640, 480, 
+   HWND hwnd = CreateWindow( L"GFX-OpenGL32", L"", WS_POPUP, 0, 0, 640, 480, 
                              NULL, NULL, winState.appInstance, NULL );
    AssertFatal( hwnd != NULL, "Failed to create the window for the GL test window." );
 
@@ -130,12 +130,12 @@ void GFXGLDevice::enumerateAdapters( Vector<GFXAdapter*> &adapterList )
    if (renderer)
    {
       dStrcpy(toAdd->mName, renderer);
-      dStrncat(toAdd->mName, " OpenGL", GFXAdapter::MaxAdapterNameLen);
+      dStrncat(toAdd->mName, " OpenGL32", GFXAdapter::MaxAdapterNameLen);
    }
    else
-      dStrcpy(toAdd->mName, "OpenGL");
+      dStrcpy(toAdd->mName, "OpenGL32");
 
-   toAdd->mType = OpenGL;
+   toAdd->mType = OpenGL32;
    toAdd->mShaderModel = 0.f;
    toAdd->mCreateDeviceInstanceDelegate = mCreateDeviceInstance;
 
@@ -187,7 +187,7 @@ void GFXGLDevice::enumerateAdapters( Vector<GFXAdapter*> &adapterList )
    wglDeleteContext(tempGLRC);
    ReleaseDC(hwnd, tempDC);
    DestroyWindow(hwnd);
-   UnregisterClass(L"GFX-OpenGL", winState.appInstance);
+   UnregisterClass(L"GFX-OpenGL32", winState.appInstance);
 }
 
 void GFXGLDevice::enumerateVideoModes() 

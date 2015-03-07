@@ -71,9 +71,11 @@ inline static void _GFXInitReportAdapters(Vector<GFXAdapter*> &adapters)
       case Direct3D9:
          Con::printf("   Direct 3D (version 9.x) device found");
          break;
-      case OpenGL:
-         Con::printf("   OpenGL device found");
+      case OpenGL32:
+         Con::printf("   OpenGL 3.2 device found");
          break;
+      case OpenGL21:
+         Con::printf("   OpenGL 2.1 device found");
       case NullDevice:
          Con::printf("   Null device found");
          break;
@@ -202,11 +204,18 @@ GFXAdapter* GFXInit::chooseAdapter( GFXAdapterType type, const char* outputDevic
 {
    GFXAdapter* adapter = GFXInit::getAdapterOfType(type, outputDevice);
    
-   if(!adapter && type != OpenGL)
+   if (!adapter && !GFXAdapter_isOpenGL(type))
    {
       Con::errorf("The requested renderer, %s, doesn't seem to be available."
-                  " Trying the default, OpenGL.", getAdapterNameFromType(type));
-      adapter = GFXInit::getAdapterOfType(OpenGL, outputDevice);
+                  " Trying the default, OpenGL32.", getAdapterNameFromType(type));
+      adapter = GFXInit::getAdapterOfType(OpenGL32, outputDevice);
+   }
+
+   if (!adapter)
+   {
+      Con::errorf("The requested renderer, %s, doesn't seem to be available."
+         " Trying the default, OpenGL21.", getAdapterNameFromType(type));
+      adapter = GFXInit::getAdapterOfType(OpenGL21, outputDevice);
    }
    
    if(!adapter)
@@ -221,12 +230,12 @@ GFXAdapter* GFXInit::chooseAdapter( GFXAdapterType type, const char* outputDevic
 
 const char* GFXInit::getAdapterNameFromType(GFXAdapterType type)
 {
-   static const char* _names[] = { "OpenGL", "D3D9", "D3D8", "NullDevice", "Xenon" };
+   static const char* _names[] = { "OpenGL32", "OpenGL21", "D3D9", "D3D8", "NullDevice", "Xenon" };
    
    if( type < 0 || type >= GFXAdapterType_Count )
    {
       Con::errorf( "GFXInit::getAdapterNameFromType - Invalid renderer type, defaulting to OpenGL" );
-      return _names[OpenGL];
+      return _names[OpenGL32]; // todo: default to GL 2.1
    }
       
    return _names[type];
@@ -285,8 +294,16 @@ GFXAdapter *GFXInit::getBestAdapterChoice()
          }
          break;
 
-      case OpenGL:
+      case OpenGL32:
          if(currAdapter->mShaderModel > highestSMGL)
+         {
+            highestSMGL = currAdapter->mShaderModel;
+            foundAdapterGL = currAdapter;
+         }
+         break;
+
+      case OpenGL21:
+         if (currAdapter->mShaderModel > highestSMGL)
          {
             highestSMGL = currAdapter->mShaderModel;
             foundAdapterGL = currAdapter;

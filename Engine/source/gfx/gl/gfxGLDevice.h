@@ -57,7 +57,7 @@ public:
 
    virtual void activate() { }
    virtual void deactivate() { }
-   virtual GFXAdapterType getAdapterType() { return OpenGL; }
+   virtual GFXAdapterType getAdapterType() { return OpenGL32; } // todo fix
 
    virtual void enterDebugEvent(ColorI color, const char *name);
    virtual void leaveDebugEvent();

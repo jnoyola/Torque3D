@@ -727,7 +727,7 @@ Var *LinearEyeDepthConditioner::_conditionOutput( Var *unconditionedOutput, Mult
 {
    Var *retVar = NULL;
 
-   String fracMethodName = (GFX->getAdapterType() == OpenGL) ? "fract" : "frac";
+   String fracMethodName = (GFXAdapter_isOpenGL(GFX->getAdapterType())) ? "fract" : "frac";
 
    switch(getBufferFormat())
    {
@@ -752,7 +752,7 @@ Var *LinearEyeDepthConditioner::_conditionOutput( Var *unconditionedOutput, Mult
 
 Var *LinearEyeDepthConditioner::_unconditionInput( Var *conditionedInput, MultiLine *meta )
 {
-   String float4Typename = (GFX->getAdapterType() == OpenGL) ? "vec4" : "float4";
+   String float4Typename = (GFXAdapter_isOpenGL(GFX->getAdapterType())) ? "vec4" : "float4";
 
    Var *retVar = conditionedInput;
    if(getBufferFormat() != GFXFormat_COUNT)
@@ -797,7 +797,7 @@ Var* LinearEyeDepthConditioner::printMethodHeader( MethodType methodType, const 
    {
       Var *methodVar = new Var;
       methodVar->setName(methodName);
-      if (GFX->getAdapterType() == OpenGL)
+      if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
          methodVar->setType("vec4");
       else
          methodVar->setType("inline float4");
@@ -810,7 +810,7 @@ Var* LinearEyeDepthConditioner::printMethodHeader( MethodType methodType, const 
 
       Var *screenUV = new Var;
       screenUV->setName("screenUVVar");
-      if (GFX->getAdapterType() == OpenGL)
+      if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
          screenUV->setType("vec2");
       else
          screenUV->setType("float2");
@@ -818,7 +818,7 @@ Var* LinearEyeDepthConditioner::printMethodHeader( MethodType methodType, const 
 
       Var *bufferSample = new Var;
       bufferSample->setName("bufferSample");
-      if (GFX->getAdapterType() == OpenGL)
+      if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
          bufferSample->setType("vec4");
       else
          bufferSample->setType("float4");
@@ -833,12 +833,12 @@ Var* LinearEyeDepthConditioner::printMethodHeader( MethodType methodType, const 
       // The linear depth target has no mipmaps, so use tex2dlod when
       // possible so that the shader compiler can optimize.
       meta->addStatement( new GenOp( "   #if TORQUE_SM >= 30\r\n" ) );
-      if (GFX->getAdapterType() == OpenGL)
+      if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
          meta->addStatement( new GenOp( "    @ = textureLod(@, @, 0); \r\n", bufferSampleDecl, prepassSampler, screenUV) );
       else
          meta->addStatement( new GenOp( "      @ = tex2Dlod(@, float4(@,0,0));\r\n", bufferSampleDecl, prepassSampler, screenUV ) );
       meta->addStatement( new GenOp( "   #else\r\n" ) );
-      if (GFX->getAdapterType() == OpenGL)
+      if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
          meta->addStatement( new GenOp( "    @ = texture(@, @);\r\n", bufferSampleDecl, prepassSampler, screenUV) );
       else
          meta->addStatement( new GenOp( "      @ = tex2D(@, @);\r\n", bufferSampleDecl, prepassSampler, screenUV ) );

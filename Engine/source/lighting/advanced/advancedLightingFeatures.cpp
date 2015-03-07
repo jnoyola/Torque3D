@@ -53,7 +53,7 @@ void AdvancedLightingFeatures::registerFeatures( const GFXFormat &prepassTargetF
 
    ConditionerFeature *cond = NULL;
 
-   if(GFX->getAdapterType() == OpenGL)
+   if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
    {
 #if defined( TORQUE_OPENGL ) 
       cond = new GBufferConditionerGLSL( prepassTargetFormat, GBufferConditionerGLSL::ViewSpace );

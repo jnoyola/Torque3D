@@ -95,7 +95,7 @@ DefineConsoleFunction(printGFXGLTimers, void,(), ,"")
 
 bool initGLProfiler(GFXDevice::GFXDeviceEventType ev)
 {
-   if(ev != GFXDevice::deInit || GFX->getAdapterType() != OpenGL)        
+   if (ev != GFXDevice::deInit || !GFXAdapter_isOpenGL(GFX->getAdapterType()))
       return true;
 
    Con::evaluatef("GlobalActionMap.bindCmd(keyboard, \"alt F4\", \"printGFXGLTimers();\");");

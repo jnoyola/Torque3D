@@ -276,7 +276,7 @@ GFXTextureObject *RenderPassManager::getDepthTargetTexture()
       // If this is OpenGL, make sure the depth target matches up
       // with the active render target.  Otherwise recreate.
       
-      if( GFX->getAdapterType() == OpenGL )
+      if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
       {
          GFXTarget* activeRT = GFX->getActiveRenderTarget();
          AssertFatal( activeRT, "Must be an active render target to call 'getDepthTargetTexture'" );
@@ -290,7 +290,7 @@ GFXTextureObject *RenderPassManager::getDepthTargetTexture()
          return mDepthBuff.getPointer();
    }
 
-   if(GFX->getAdapterType() == OpenGL)
+   if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
    {
       AssertFatal(GFX->getActiveRenderTarget(), "Must be an active render target to call 'getDepthTargetTexture'");
 

@@ -107,7 +107,7 @@ MODULE_BEGIN( ShaderGenGLSL )
    MODULE_INIT
    {
       sInitDelegate.bind( &_initShaderGenGLSL );
-      SHADERGEN->registerInitDelegate(OpenGL, sInitDelegate);   
+      SHADERGEN->registerInitDelegate(OpenGL32, sInitDelegate);   // todo openGL21
    }
    
 MODULE_END;

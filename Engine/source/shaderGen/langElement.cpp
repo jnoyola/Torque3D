@@ -161,7 +161,7 @@ void Var::print( Stream &stream )
    if( structName[0] != '\0' )
    {
       stream.write( dStrlen((char*)structName), structName );
-      if(GFX->getAdapterType() == OpenGL)
+      if (GFXAdapter_isOpenGL(GFX->getAdapterType()))
          stream.write( 1, "_" );
       else
       stream.write( 1, "." );

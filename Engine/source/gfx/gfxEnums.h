@@ -275,13 +275,19 @@ enum GFXBlend
 /// GFXInit::getAdapterNameFromType().
 enum GFXAdapterType 
 {
-   OpenGL = 0,
+   OpenGL32 = 0,
+   OpenGL21,
    Direct3D9,
    Direct3D8,
    NullDevice,
    Direct3D9_360,
    GFXAdapterType_Count
 };
+
+inline bool GFXAdapter_isOpenGL(GFXAdapterType type)
+{
+   return type == OpenGL21 || type == OpenGL32;
+}
 
 enum GFXCullMode
 {
