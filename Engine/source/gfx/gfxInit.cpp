@@ -76,6 +76,7 @@ inline static void _GFXInitReportAdapters(Vector<GFXAdapter*> &adapters)
          break;
       case OpenGL21:
          Con::printf("   OpenGL 2.1 device found");
+         break;
       case NullDevice:
          Con::printf("   Null device found");
          break;
