@@ -84,14 +84,14 @@ void BumpFeatGLSL::processPix(   Vector<ShaderComponent*> &componentList,
 		
       // Parameters of the texture atlas
       Var *atParams  = new Var;
-      atParams->setType( "float4" );
+      atParams->setType( "vec4" );
       atParams->setName("bumpAtlasParams");
       atParams->uniform = true;
       atParams->constSortPos = cspPotentialPrimitive;
 		
       // Parameters of the texture (tile) this object is using in the atlas
       Var *tileParams  = new Var;
-      tileParams->setType( "float4" );
+      tileParams->setType( "vec4" );
       tileParams->setName("bumpAtlasTileParams");
       tileParams->uniform = true;
       tileParams->constSortPos = cspPotentialPrimitive;
@@ -100,18 +100,18 @@ void BumpFeatGLSL::processPix(   Vector<ShaderComponent*> &componentList,
 		if(is_sm3)
       {
          // Figure out the mip level
-         meta->addStatement( new GenOp( "   float2 _dx_bump = ddx(@ * @.z);\r\n", texCoord, atParams ) );
-         meta->addStatement( new GenOp( "   float2 _dy_bump = ddy(@ * @.z);\r\n", texCoord, atParams ) );
+         meta->addStatement( new GenOp( "   vec2 _dx_bump = ddx(@ * @.z);\r\n", texCoord, atParams ) );
+         meta->addStatement( new GenOp( "   vec2 _dy_bump = ddy(@ * @.z);\r\n", texCoord, atParams ) );
          meta->addStatement( new GenOp( "   float mipLod_bump = 0.5 * log2(max(dot(_dx_bump, _dx_bump), dot(_dy_bump, _dy_bump)));\r\n"));
          meta->addStatement( new GenOp( "   mipLod_bump = clamp(mipLod_bump, 0.0, @.w);\r\n", atParams));
 			
          // And the size of the mip level
          meta->addStatement(new GenOp("   float mipPixSz_bump = pow(2.0, @.w - mipLod_bump);\r\n", atParams));
-         meta->addStatement( new GenOp( "   float2 mipSz_bump = mipPixSz_bump / @.xy;\r\n", atParams ) );
+         meta->addStatement( new GenOp( "   vec2 mipSz_bump = mipPixSz_bump / @.xy;\r\n", atParams ) );
       }
       else
       {
-         meta->addStatement(new GenOp("   float2 mipSz = float2(1.0, 1.0);\r\n"));
+         meta->addStatement(new GenOp("   vec2 mipSz = vec2(1.0, 1.0);\r\n"));
       }
 		
 		// Tiling mode
@@ -129,19 +129,19 @@ void BumpFeatGLSL::processPix(   Vector<ShaderComponent*> &componentList,
 		
       if(is_sm3)
 		{
-         texOp = new GenOp( "tex2Dlod(@, float4(@, 0.0, mipLod_bump))", bumpMap, texCoord );
+         texOp = new GenOp( "tex2Dlod(@, float4(@, 0.0, mipLod_bump))", bumpMap, texCoord ); // TODO
 		}
 		else
 		{
-         texOp = new GenOp( "tex2D(@, @)", bumpMap, texCoord );
+         texOp = new GenOp( "texture(@, @)", bumpMap, texCoord ); //tex2D
 		}
 	}
 	else
 	{
-      texOp = new GenOp( "tex2D(@, @)", bumpMap, texCoord );
+      texOp = new GenOp( "texture(@, @)", bumpMap, texCoord ); // tex2D
 	}
 		
-   Var *bumpNorm = new Var( "bumpNormal", "float4" );
+   Var *bumpNorm = new Var( "bumpNormal", "vec4" );
    meta->addStatement( expandNormalMap( texOp, new DecOp( bumpNorm ), bumpNorm, fd ) );
 
 	// If we have a detail normal map we add the xy coords of
@@ -161,7 +161,7 @@ void BumpFeatGLSL::processPix(   Vector<ShaderComponent*> &componentList,
 		
       Var *detailBump = new Var;
       detailBump->setName( "detailBump" );
-      detailBump->setType( "float4" );
+      detailBump->setType( "vec4" );
       meta->addStatement( expandNormalMap( texOp, new DecOp( detailBump ), detailBump, fd ) );
 		
       Var *detailBumpScale = new Var;
@@ -288,7 +288,7 @@ void ParallaxFeatGLSL::processVert( Vector<ShaderComponent*> &componentList,
    outNegViewTS->setName( "outNegViewTS" );
    outNegViewTS->setStructName( "OUT" );
    outNegViewTS->setType( "vec3" );
-   meta->addStatement( new GenOp( "   @ = tMul( @, float3( @.xyz - @ ) );\r\n", 
+   meta->addStatement( new GenOp( "   @ = tMul( @, vec3( @.xyz - @ ) );\r\n", 
       outNegViewTS, objToTangentSpace, inPos, eyePos ) );
 
    // TODO: I'm at a loss at why i need to flip the binormal/y coord
@@ -304,7 +304,7 @@ void ParallaxFeatGLSL::processVert( Vector<ShaderComponent*> &componentList,
    Var *texMat = (Var*)LangElement::find( "texMat" );
    if ( texMat )
    {
-      meta->addStatement( new GenOp( "   @ = tMul(@, float4(@,0)).xyz;\r\n",
+      meta->addStatement( new GenOp( "   @ = tMul(@, vec4(@,0)).xyz;\r\n",
          outNegViewTS, texMat, outNegViewTS ) );
    }
 	
@@ -422,7 +422,7 @@ void NormalsOutFeatGLSL::processVert(  Vector<ShaderComponent*> &componentList,
    {
       // If we don't have a vertex normal... just pass the
       // camera facing normal to the pixel shader.
-      meta->addStatement( new GenOp( "   @ = float3( 0.0, 0.0, 1.0 );\r\n", outNormal ) );
+      meta->addStatement( new GenOp( "   @ = vec3( 0.0, 0.0, 1.0 );\r\n", outNormal ) );
    }
 }
 
@@ -449,15 +449,15 @@ void NormalsOutFeatGLSL::processPix(   Vector<ShaderComponent*> &componentList,
       // precision for normals and performs much better
       // on older Geforce cards.
       //
-      meta->addStatement( new GenOp( "   @ = normalize( half3( @ ) );\r\n", wsNormal, wsNormal ) );      
+      meta->addStatement( new GenOp( "   @ = normalize( vec3( @ ) );\r\n", wsNormal, wsNormal ) );      
    }
 	
    LangElement *normalOut;
    Var *outColor = (Var*)LangElement::find( "col" );
    if ( outColor && !fd.features[MFT_AlphaTest] )
-      normalOut = new GenOp( "float4( ( -@ + 1 ) * 0.5, @.a )", wsNormal, outColor );
+      normalOut = new GenOp( "vec4( ( -@ + 1 ) * 0.5, @.a )", wsNormal, outColor );
    else
-      normalOut = new GenOp( "float4( ( -@ + 1 ) * 0.5, 1 )", wsNormal );
+      normalOut = new GenOp( "vec4( ( -@ + 1 ) * 0.5, 1 )", wsNormal );
 	
    meta->addStatement( new GenOp( "   @;\r\n", 
 											assignColor( normalOut, Material::None ) ) );

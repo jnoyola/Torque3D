@@ -143,7 +143,7 @@ void AccuTexFeatGLSL::processPix(Vector<ShaderComponent*> &componentList,
    }
 
    // get the accu pixel color
-   meta->addStatement( new GenOp( "   @ = tex2D(@, @ * @);\r\n", colorAccuDecl, accuMap, inTex, accuScale ) );
+   meta->addStatement( new GenOp( "   @ = texture(@, @ * @);\r\n", colorAccuDecl, accuMap, inTex, accuScale ) ); // tex2D
 
    // scale up normals
    meta->addStatement( new GenOp( "   @.xyz = @.xyz * 2.0 - 0.5;\r\n", bumpNorm, bumpNorm ) );
@@ -152,7 +152,7 @@ void AccuTexFeatGLSL::processPix(Vector<ShaderComponent*> &componentList,
    meta->addStatement( new GenOp( "   @.z *= @*2.0;\r\n", accuVec, accuDirection ) );
 
    // saturate based on strength
-   meta->addStatement( new GenOp( "   @ = saturate( float4(dot( float3(@), @.xyz * pow(@, 5) ) ));\r\n", plcAccu, bumpNorm, accuVec, accuStrength ) );
+   meta->addStatement( new GenOp( "   @ = saturate( vec4(dot( vec3(@), @.xyz * pow(@, 5) ) ));\r\n", plcAccu, bumpNorm, accuVec, accuStrength ) );
 
    // add coverage
    meta->addStatement( new GenOp( "   @.a += (2 * pow(@/2, 5)) - 0.5;\r\n", accuPlc, accuCoverage ) );
@@ -163,7 +163,7 @@ void AccuTexFeatGLSL::processPix(Vector<ShaderComponent*> &componentList,
    // light
    Var *lightColor = (Var*) LangElement::find( "d_lightcolor" );
    if(lightColor != NULL)
-      meta->addStatement( new GenOp( "   @ *= float4(@, 1.0);\r\n\r\n", accuColor, lightColor ) );
+      meta->addStatement( new GenOp( "   @ *= vec4(@, 1.0);\r\n\r\n", accuColor, lightColor ) );
 
    // lerp with current pixel - use the accu alpha as well
    meta->addStatement( new GenOp( "   @ = mix( @, @, @.a * @.a);\r\n", color, color, accuColor, accuPlc, accuColor ) );
@@ -194,7 +194,7 @@ void AccuTexFeatGLSL::getAccuVec(MultiLine *meta, LangElement *accuVec)
    if ( !objTrans )
    {
       objTrans = new Var;
-      objTrans->setType( "float4x4" );
+      objTrans->setType( "mat4" );
       objTrans->setName( "objTrans" );
       objTrans->uniform = true;
       objTrans->constSortPos = cspPrimitive;      
@@ -202,18 +202,18 @@ void AccuTexFeatGLSL::getAccuVec(MultiLine *meta, LangElement *accuVec)
 
    // accu obj trans
    Var *aobjTrans = new Var;
-   aobjTrans->setType( "float4x4" );
+   aobjTrans->setType( "mat4" );
    aobjTrans->setName( "accuObjTrans" );
    LangElement *accuObjTransDecl = new DecOp( aobjTrans );
 
    Var *outObjToTangentSpace = (Var*)LangElement::find( "objToTangentSpace" );
 
    Var *tav = new Var;
-   tav->setType( "float4" );
+   tav->setType( "vec4" );
    tav->setName( "tAccuVec" );
    LangElement *tavDecl = new DecOp( tav );
 
-   meta->addStatement( new GenOp( "   @ = float4(0,0,1,0);\r\n", tavDecl ) );
+   meta->addStatement( new GenOp( "   @ = vec4(0,0,1,0);\r\n", tavDecl ) );
    meta->addStatement( new GenOp( "   @ = transpose(@);\r\n", accuObjTransDecl, objTrans ) );
    meta->addStatement( new GenOp( "   @ = tMul(@, @);\r\n", tav, aobjTrans, tav ) );
    meta->addStatement( new GenOp( "   @.xyz = tMul(@, @.xyz);\r\n", tav, outObjToTangentSpace, tav ) );
@@ -231,7 +231,7 @@ Var* AccuTexFeatGLSL::addOutAccuVec(Vector<ShaderComponent*> &componentList, Mul
       outAccuVec = connectComp->getElement( RT_TEXCOORD );
       outAccuVec->setName( "accuVec" );
       outAccuVec->setStructName( "OUT" );
-      outAccuVec->setType( "float3" );
+      outAccuVec->setType( "vec3" );
       outAccuVec->mapsToSampler = false;
 
       getAccuVec( meta, outAccuVec );

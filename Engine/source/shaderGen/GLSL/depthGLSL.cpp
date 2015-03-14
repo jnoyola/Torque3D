@@ -47,13 +47,13 @@ void EyeSpaceDepthOutGLSL::processVert(   Vector<ShaderComponent*> &componentLis
    if( !eyePos )
    {
       eyePos = new Var;
-      eyePos->setType("float3");
+      eyePos->setType("vec3");
       eyePos->setName("eyePosWorld");
       eyePos->uniform = true;
       eyePos->constSortPos = cspPass;
    }
 
-   meta->addStatement( new GenOp( "   @ = float4( @.xyz - @, 1 );\r\n", outWSEyeVec, wsPosition, eyePos ) );
+   meta->addStatement( new GenOp( "   @ = vec4( @.xyz - @, 1 );\r\n", outWSEyeVec, wsPosition, eyePos ) );
 }
 
 void EyeSpaceDepthOutGLSL::processPix( Vector<ShaderComponent*> &componentList, 
@@ -66,13 +66,13 @@ void EyeSpaceDepthOutGLSL::processPix( Vector<ShaderComponent*> &componentList,
    Var *wsEyeVec = connectComp->getElement( RT_TEXCOORD );
    wsEyeVec->setName( "wsEyeVec" );
    wsEyeVec->setStructName( "IN" );
-   wsEyeVec->setType( "float4" );
+   wsEyeVec->setType( "vec4" );
    wsEyeVec->mapsToSampler = false;
    wsEyeVec->uniform = false;
 
    // get shader constants
    Var *vEye = new Var;
-   vEye->setType("float3");
+   vEye->setType("vec3");
    vEye->setName("vEye");
    vEye->uniform = true;
    vEye->constSortPos = cspPass;
@@ -97,7 +97,7 @@ void EyeSpaceDepthOutGLSL::processPix( Vector<ShaderComponent*> &componentList,
    if ( !farDist )
    {
       farDist = new Var;
-      farDist->setType("float4");
+      farDist->setType("vec4");
       farDist->setName("oneOverFarplane");
       farDist->uniform = true;
       farDist->constSortPos = cspPass;
@@ -109,7 +109,7 @@ void EyeSpaceDepthOutGLSL::processPix( Vector<ShaderComponent*> &componentList,
    // If there isn't an output conditioner for the pre-pass, than just write
    // out the depth to rgba and return.
    if( !fd.features[MFT_PrePassConditioner] )
-      meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "float4(float3(@),1)", depthOut ), Material::None ) ) );
+      meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "vec4(vec3(@),1)", depthOut ), Material::None ) ) );
    
    output = meta;
 }
@@ -163,7 +163,7 @@ void DepthOutGLSL::processPix(   Vector<ShaderComponent*> &componentList,
    depthOut->setName(getOutputVarName());
    */
 
-   LangElement *depthOut = new GenOp( "float4( @, 0, 0, 1 )", depthVar );
+   LangElement *depthOut = new GenOp( "vec4( @, 0, 0, 1 )", depthVar );
 
    output = new GenOp( "   @;\r\n", assignColor( depthOut, Material::None ) );
 }

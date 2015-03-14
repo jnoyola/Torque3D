@@ -65,7 +65,7 @@ void ParaboloidVertTransformGLSL::processVert(  Vector<ShaderComponent*> &compon
    // http://www.gamedev.net/reference/articles/article2308.asp
 
    // Swizzle z and y post-transform
-   meta->addStatement( new GenOp( "   @ = tMul(@, float4(@.xyz,1)).xzyw;\r\n", outPosition, worldViewOnly, inPosition ) );
+   meta->addStatement( new GenOp( "   @ = tMul(@, vec4(@.xyz,1)).xzyw;\r\n", outPosition, worldViewOnly, inPosition ) );
    meta->addStatement( new GenOp( "   float L = length(@.xyz);\r\n", outPosition ) ); 
 
    if ( isSinglePass )
@@ -102,7 +102,7 @@ void ParaboloidVertTransformGLSL::processVert(  Vector<ShaderComponent*> &compon
 
    // Pass unmodified to pixel shader to allow it to clip properly.
    Var *outPosXY = connectComp->getElement( RT_TEXCOORD );
-   outPosXY->setType( "float2" );
+   outPosXY->setType( "vec2" );
    outPosXY->setName( "posXY" );
    outPosXY->setStructName( "OUT" );
    meta->addStatement( new GenOp( "   @ = @.xy;\r\n", outPosXY, outPosition ) ); 
