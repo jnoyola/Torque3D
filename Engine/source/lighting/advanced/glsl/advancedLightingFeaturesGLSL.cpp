@@ -140,7 +140,7 @@ void DeferredRTLightingFeatGLSL::processPix( Vector<ShaderComponent*> &component
 
    // Perform the uncondition here.
    String unconditionLightInfo = String::ToLower( AdvancedLightBinManager::smBufferName ) + "Uncondition";
-   meta->addStatement( new GenOp( avar( "   %s(tex2D(@, @), @, @, @);\r\n", 
+   meta->addStatement( new GenOp( avar( "   %s(texture(@, @), @, @, @);\r\n", // tex2D
       unconditionLightInfo.c_str() ), lightInfoBuffer, uvScene, d_lightcolor, d_NL_Att, d_specular ) );
 
    // If this has an interlaced pre-pass, do averaging here
@@ -156,18 +156,18 @@ void DeferredRTLightingFeatGLSL::processPix( Vector<ShaderComponent*> &component
          oneOverTargetSize->constSortPos = cspPass;
       }
 
-      meta->addStatement( new GenOp( "   float id_NL_Att, id_specular;\r\n   float3 id_lightcolor;\r\n" ) );
-      meta->addStatement( new GenOp( avar( "   %s(tex2D(@, @ + float2(0.0, @.y)), id_lightcolor, id_NL_Att, id_specular);\r\n", 
+      meta->addStatement( new GenOp( "   float id_NL_Att, id_specular;\r\n   vec3 id_lightcolor;\r\n" ) );
+      meta->addStatement( new GenOp( avar( "   %s(texture(@, @ + vec2(0.0, @.y)), id_lightcolor, id_NL_Att, id_specular);\r\n",  // tex2D
          unconditionLightInfo.c_str() ), lightInfoBuffer, uvScene, oneOverTargetSize ) );
 
-      meta->addStatement( new GenOp("   @ = lerp(@, id_lightcolor, 0.5);\r\n", d_lightcolor, d_lightcolor ) );
-      meta->addStatement( new GenOp("   @ = lerp(@, id_NL_Att, 0.5);\r\n", d_NL_Att, d_NL_Att ) );
-      meta->addStatement( new GenOp("   @ = lerp(@, id_specular, 0.5);\r\n", d_specular, d_specular ) );
+      meta->addStatement( new GenOp("   @ = mix(@, id_lightcolor, 0.5);\r\n", d_lightcolor, d_lightcolor ) );
+      meta->addStatement( new GenOp("   @ = mix(@, id_NL_Att, 0.5);\r\n", d_NL_Att, d_NL_Att ) );
+      meta->addStatement( new GenOp("   @ = mix(@, id_specular, 0.5);\r\n", d_specular, d_specular ) );
    }
 
    // This is kind of weak sauce
    if( !fd.features[MFT_VertLit] && !fd.features[MFT_ToneMap] && !fd.features[MFT_LightMap] && !fd.features[MFT_SubSurface] )
-      meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "float4(@, 1.0)", d_lightcolor ), Material::Mul ) ) );
+      meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "vec4(@, 1.0)", d_lightcolor ), Material::Mul ) ) );
 
    output = meta;
 }
@@ -273,7 +273,7 @@ void DeferredBumpFeatGLSL::processPix( Vector<ShaderComponent*> &componentList,
       // create texture var
       Var *bumpMap = getNormalMapTex();
       Var *texCoord = getInTexCoord( "texCoord", "vec2", true, componentList );
-      LangElement *texOp = new GenOp( "tex2D(@, @)", bumpMap, texCoord );
+      LangElement *texOp = new GenOp( "texture(@, @)", bumpMap, texCoord ); // tex2D
 
       // create bump normal
       Var *bumpNorm = new Var;
@@ -296,7 +296,7 @@ void DeferredBumpFeatGLSL::processPix( Vector<ShaderComponent*> &componentList,
          bumpMap->constNum = Var::getTexUnitNum();
 
          texCoord = getInTexCoord( "detCoord", "vec2", true, componentList );
-         texOp = new GenOp( "tex2D(@, @)", bumpMap, texCoord );
+         texOp = new GenOp( "texture(@, @)", bumpMap, texCoord ); // tex2D
 
          Var *detailBump = new Var;
          detailBump->setName( "detailBump" );
@@ -320,12 +320,12 @@ void DeferredBumpFeatGLSL::processPix( Vector<ShaderComponent*> &componentList,
       //
       Var *gbNormal = new Var;
       gbNormal->setName( "gbNormal" );
-      gbNormal->setType( "half3" );
+      gbNormal->setType( "vec3" );
       LangElement *gbNormalDecl = new DecOp( gbNormal );
 
       // Normalize is done later... 
       // Note: The reverse mul order is intentional. Affine matrix.
-      meta->addStatement( new GenOp( "   @ = half3(tMul( @.xyz, @ ));\r\n", gbNormalDecl, bumpNorm, viewToTangent ) );
+      meta->addStatement( new GenOp( "   @ = vec3(tMul( @.xyz, @ ));\r\n", gbNormalDecl, bumpNorm, viewToTangent ) );
 
       output = meta;
       return;
@@ -347,7 +347,7 @@ void DeferredBumpFeatGLSL::processPix( Vector<ShaderComponent*> &componentList,
          bumpSample->setName("bumpSample");
          LangElement *bumpSampleDecl = new DecOp(bumpSample);
 
-         meta->addStatement(new GenOp("   @ = tex2D(@, @);\r\n", bumpSampleDecl, bumpMap, texCoord));
+         meta->addStatement(new GenOp("   @ = texture(@, @);\r\n", bumpSampleDecl, bumpMap, texCoord)); // tex2D
 
          if (fd.features.hasFeature(MFT_DetailNormalMap))
          {
@@ -362,7 +362,7 @@ void DeferredBumpFeatGLSL::processPix( Vector<ShaderComponent*> &componentList,
             }
 
             texCoord = getInTexCoord("detCoord", "vec2", true, componentList);
-            LangElement *texOp = new GenOp("tex2D(@, @)", bumpMap, texCoord);
+            LangElement *texOp = new GenOp("texture(@, @)", bumpMap, texCoord); // tex2D
 
             Var *detailBump = new Var;
             detailBump->setName("detailBump");
@@ -403,7 +403,7 @@ void DeferredBumpFeatGLSL::processPix( Vector<ShaderComponent*> &componentList,
          bumpSample->setName( "bumpSample" );
          LangElement *bumpSampleDecl = new DecOp( bumpSample );
 
-         output = new GenOp( "   @ = tex2D(@, @);\r\n", bumpSampleDecl, bumpMap, texCoord );
+         output = new GenOp( "   @ = texture(@, @);\r\n", bumpSampleDecl, bumpMap, texCoord ); // tex2D
          return;
       }
    }
@@ -552,13 +552,13 @@ void DeferredPixelSpecularGLSL::processPix(  Vector<ShaderComponent*> &component
       Var *accuSpecular = (Var*)LangElement::find("accuSpecular");
       if (accuPlc != NULL && accuSpecular != NULL)
          //d_specular = clamp(lerp( d_specular, accuSpecular * d_specular, plc.a), 0, 1)
-         meta->addStatement(new GenOp("   @ = clamp( lerp( @, @ * @, @.a), 0, 1);\r\n", d_specular, d_specular, accuSpecular, d_specular, accuPlc));
+         meta->addStatement(new GenOp("   @ = clamp( mix( @, @ * @, @.a), 0, 1);\r\n", d_specular, d_specular, accuSpecular, d_specular, accuPlc));
    }
    // (a^m)^n = a^(m*n)
    meta->addStatement( new GenOp( "   @ = pow( abs(@), max((@ / AL_ConstantSpecularPower),1.0f)) * @;\r\n", 
       specDecl, d_specular, specPow, specStrength ) );
 
-   LangElement *specMul = new GenOp( "float4( @.rgb, 0 ) * @", specCol, specular );
+   LangElement *specMul = new GenOp( "vec4( @.rgb, 0 ) * @", specCol, specular );
    LangElement *final = specMul;
 
    // We we have a normal map then mask the specular 
@@ -682,10 +682,10 @@ void DeferredMinnaertGLSL::processPix( Vector<ShaderComponent*> &componentList,
 
    Var *d_NL_Att = (Var*)LangElement::find( "d_NL_Att" );
 
-   meta->addStatement( new GenOp( avar( "   float4 normalDepth = %s(@, @);\r\n", unconditionPrePassMethod.c_str() ), prepassBuffer, uvScene ) );
+   meta->addStatement( new GenOp( avar( "   vec4 normalDepth = %s(@, @);\r\n", unconditionPrePassMethod.c_str() ), prepassBuffer, uvScene ) );
    meta->addStatement( new GenOp( "   float vDotN = dot(normalDepth.xyz, @);\r\n", wsViewVec ) );
    meta->addStatement( new GenOp( "   float Minnaert = pow( @, @) * pow(vDotN, 1.0 - @);\r\n", d_NL_Att, minnaertConstant, minnaertConstant ) );
-   meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "float4(Minnaert, Minnaert, Minnaert, 1.0)" ), Material::Mul ) ) );
+   meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "vec4(Minnaert, Minnaert, Minnaert, 1.0)" ), Material::Mul ) ) );
 
    output = meta;
 }
@@ -713,7 +713,7 @@ void DeferredSubSurfaceGLSL::processPix(  Vector<ShaderComponent*> &componentLis
    MultiLine *meta = new MultiLine;
    meta->addStatement( new GenOp( "   float subLamb = smoothstep(-@.a, 1.0, @) - smoothstep(0.0, 1.0, @);\r\n", subSurfaceParams, d_NL_Att, d_NL_Att ) );
    meta->addStatement( new GenOp( "   subLamb = max(0.0, subLamb);\r\n" ) );
-   meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "float4(@ + (subLamb * @.rgb), 1.0)", d_lightcolor, subSurfaceParams ), Material::Mul ) ) );
+   meta->addStatement( new GenOp( "   @;\r\n", assignColor( new GenOp( "vec4(@ + (subLamb * @.rgb), 1.0)", d_lightcolor, subSurfaceParams ), Material::Mul ) ) );
 
    output = meta;
 }
