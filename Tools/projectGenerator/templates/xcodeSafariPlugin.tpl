@@ -339,7 +339,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-            SDKROOT = macosx10.7;
+            SDKROOT = macosx10.10;
 			};
 			name = Debug;
 		};
@@ -350,7 +350,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-            SDKROOT = macosx10.7;
+            SDKROOT = macosx10.10;
 			};
 			name = Release;
 		};
