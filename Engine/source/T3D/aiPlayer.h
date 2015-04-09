@@ -63,8 +63,15 @@ private:
 
    Point3F mAimOffset;
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+   /******************************
+    ** NOT COMPATIBLE WITH OS X **
+    ******************************/
+
    // move triggers
    bool mMoveTriggers[MaxTriggerKeys];
+
+#endif // TORQUE_NAVIGATION_ENABLED
 
    // Utility Methods
    void throwCallback( const char *name );
@@ -178,10 +185,17 @@ public:
    Point3F getMoveDestination() const { return mMoveDestination; }
    void stopMove();
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+   /******************************
+    ** NOT COMPATIBLE WITH OS X **
+    ******************************/
+
    // Trigger sets/gets
    void setMoveTrigger( U32 slot, const bool isSet = true );
    bool getMoveTrigger( U32 slot ) const;
    void clearMoveTriggers();
+
+#endif // TORQUE_NAVIGATION_ENABLED
 
 #ifdef TORQUE_NAVIGATION_ENABLED
    /// @name Pathfinding

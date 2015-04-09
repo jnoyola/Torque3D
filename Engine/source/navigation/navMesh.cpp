@@ -20,6 +20,11 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+/******************************
+ ** NOT COMPATIBLE WITH OS X **
+ ******************************/
+
 #include "navMesh.h"
 #include "navContext.h"
 #include <DetourDebugDraw.h>
@@ -1650,3 +1655,5 @@ void NavMesh::write(Stream &stream, U32 tabStop, U32 flags)
    save();
    Parent::write(stream, tabStop, flags);
 }
+
+#endif // TORQUE_NAVIGATION_ENABLED

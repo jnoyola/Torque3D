@@ -20,6 +20,11 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+/******************************
+ ** NOT COMPATIBLE WITH OS X **
+ ******************************/
+
 #include "platform/platform.h"
 #include "guiNavEditorCtrl.h"
 #include "duDebugDrawTorque.h"
@@ -639,3 +644,5 @@ ConsoleMethod(GuiNavEditorCtrl, setMode, void, 3, 3, "setMode(String mode)")
    String newMode = (argv[2]);
    object->setMode(newMode);
 }
+
+#endif // TORQUE_NAVIGATION_ENABLED

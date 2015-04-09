@@ -20,6 +20,11 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+/******************************
+ ** NOT COMPATIBLE WITH OS X **
+ ******************************/
+
 #include "torqueRecast.h"
 #include "navPath.h"
 #include "duDebugDrawTorque.h"
@@ -754,3 +759,5 @@ DefineEngineMethod(NavPath, getLength, F32, (),,
 {
    return object->getLength();
 }
+
+#endif // TORQUE_NAVIGATION_ENABLED

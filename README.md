@@ -1,4 +1,9 @@
-# Torque 3D
+# Torque 3D Win64/OSX10.10 Multiplayer Compatible
+
+Recast, Navigation Meshes, and the related parts of AIPlayer have been removed for compatibility.
+
+For building on Windows, TORQUE_NAVIGATION_ENABLED must be removed from the preprocessor definitions list (Options -> Configuration Properties -> C/C++ -> Preprocessor -> Preprocessor Definitions).
+For building on OS X, gfx/gl/osx/gfxGLDevice.mac.mm must be included in the project manually.
 
 MIT Licensed Open Source version of [Torque 3D](http://torque3d.org) from [GarageGames](http://www.garagegames.com)
 
@@ -16,7 +21,7 @@ They are available from the [downloads](http://wiki.torque3d.org/main:downloads)
 
 ## Related repositories
 
-* [Torque 3D main repository](https://github.com/GarageGames/Torque3D) (you are here!)
+* [Torque 3D main repository](https://github.com/GarageGames/Torque3D)
 * [Project Manager repository](https://github.com/GarageGames/Torque3D-ProjectManager)
 * [Offline documentation repository](https://github.com/GarageGames/Torque3D-Documentation)
 

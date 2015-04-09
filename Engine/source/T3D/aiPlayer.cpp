@@ -110,8 +110,15 @@ AIPlayer::AIPlayer()
 
    mIsAiControlled = true;
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+   /******************************
+    ** NOT COMPATIBLE WITH OS X **
+	******************************/
+
    for( S32 i = 0; i < MaxTriggerKeys; i ++ )
       mMoveTriggers[ i ] = false;
+
+#endif // TORQUE_NAVIGATION_ENABLED
 }
 
 /**
@@ -290,12 +297,17 @@ void AIPlayer::clearAim()
    mAimOffset = Point3F(0.0f, 0.0f, 0.0f);
 }
 
-/**
+#ifdef TORQUE_NAVIGATION_ENABLED
+/******************************
+ ** NOT COMPATIBLE WITH OS X **
+ ******************************/
+
+**
  * Set the state of a movement trigger.
  *
  * @param slot The trigger slot to set
  * @param isSet set/unset the trigger
- */
+ *
 void AIPlayer::setMoveTrigger( U32 slot, const bool isSet )
 {
    if(slot >= MaxTriggerKeys)
@@ -309,12 +321,12 @@ void AIPlayer::setMoveTrigger( U32 slot, const bool isSet )
    }
 }
 
-/**
+**
  * Get the state of a movement trigger.
  *
  * @param slot The trigger slot to query
  * @return True if the trigger is set, false if it is not set
- */
+ *
 bool AIPlayer::getMoveTrigger( U32 slot ) const
 {
    if(slot >= MaxTriggerKeys)
@@ -328,14 +340,16 @@ bool AIPlayer::getMoveTrigger( U32 slot ) const
    }
 }
 
-/**
+**
  * Clear the trigger state for all movement triggers.
- */
+ *
 void AIPlayer::clearMoveTriggers()
 {
    for( U32 i = 0; i < MaxTriggerKeys; i ++ )
       setMoveTrigger( i, false );
 }
+
+#endif // TORQUE_NAVIGATION_ENABLED
 
 /**
  * This method calculates the moves for the AI player
@@ -565,8 +579,22 @@ bool AIPlayer::getAIMove(Move *movePtr)
 
    // Replicate the trigger state into the move so that
    // triggers can be controlled from scripts.
+
+#ifdef TORQUE_NAVIGATION_ENABLED
+   /******************************
+    ** NOT COMPATIBLE WITH OS X **
+    ******************************/
+
    for( U32 i = 0; i < MaxTriggerKeys; i++ )
       movePtr->trigger[ i ] = mMoveTriggers[ i ];
+
+#endif // TORQUE_NAVIGATION_ENABLED
+#ifndef TORQUE_NAVIGATION_ENABLED
+
+   for(int i = 0; i < MaxTriggerKeys; i++ )
+	  movePtr->trigger[i] = getImageTriggerState(i);
+
+#endif // !TORQUE_NAVIGATION_ENABLED
 
 #ifdef TORQUE_NAVIGATION_ENABLED
    if(mJump == Now)
@@ -1309,6 +1337,11 @@ DefineEngineMethod(AIPlayer, checkInFoV, bool, (ShapeBase* obj, F32 fov, bool ch
    return object->checkInFoV(obj, fov, checkEnabled);
 }
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+/******************************
+ ** NOT COMPATIBLE WITH OS X **
+ ******************************/
+
 DefineEngineMethod( AIPlayer, setMoveTrigger, void, ( U32 slot ),,
    "@brief Sets a movement trigger on an AI object.\n\n"
    "@param slot The trigger slot to set.\n"
@@ -1348,3 +1381,5 @@ DefineEngineMethod( AIPlayer, clearMoveTriggers, void, ( ),,
 {
    object->clearMoveTriggers();
 }
+
+#endif // TORQUE_NAVIGATION_ENABLED

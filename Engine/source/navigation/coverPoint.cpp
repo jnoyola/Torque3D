@@ -20,6 +20,11 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef TORQUE_NAVIGATION_ENABLED
+/******************************
+ ** NOT COMPATIBLE WITH OS X **
+ ******************************/
+
 #include "coverPoint.h"
 
 #include "math/mathIO.h"
@@ -342,3 +347,5 @@ void CoverPoint::render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIn
    if(peekOver())
       GFX->getDrawUtil()->drawArrow(desc, Point3F(0, 0, height * 0.5), Point3F(0, 0, height), ColorI::GREEN);
 }
+
+#endif // TORQUE_NAVIGATION_ENABLED
