@@ -302,12 +302,12 @@ void AIPlayer::clearAim()
  ** NOT COMPATIBLE WITH OS X **
  ******************************/
 
-**
+/**
  * Set the state of a movement trigger.
  *
  * @param slot The trigger slot to set
  * @param isSet set/unset the trigger
- *
+ */
 void AIPlayer::setMoveTrigger( U32 slot, const bool isSet )
 {
    if(slot >= MaxTriggerKeys)
@@ -321,12 +321,12 @@ void AIPlayer::setMoveTrigger( U32 slot, const bool isSet )
    }
 }
 
-**
+/**
  * Get the state of a movement trigger.
  *
  * @param slot The trigger slot to query
  * @return True if the trigger is set, false if it is not set
- *
+ */
 bool AIPlayer::getMoveTrigger( U32 slot ) const
 {
    if(slot >= MaxTriggerKeys)
@@ -340,9 +340,9 @@ bool AIPlayer::getMoveTrigger( U32 slot ) const
    }
 }
 
-**
+/**
  * Clear the trigger state for all movement triggers.
- *
+ */
 void AIPlayer::clearMoveTriggers()
 {
    for( U32 i = 0; i < MaxTriggerKeys; i ++ )
