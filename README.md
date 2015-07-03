@@ -2,8 +2,8 @@
 
 Recast, Navigation Meshes, and the related parts of AIPlayer have been removed for compatibility.
 
-For building on Windows, TORQUE_NAVIGATION_ENABLED must be removed from the preprocessor definitions list (Options -> Configuration Properties -> C/C++ -> Preprocessor -> Preprocessor Definitions).
-For building on OS X, gfx/gl/osx/gfxGLDevice.mac.mm must be included in the project manually.
+* For building on Windows, TORQUE_NAVIGATION_ENABLED must be removed from the preprocessor definitions list (Options -> Configuration Properties -> C/C++ -> Preprocessor -> Preprocessor Definitions)
+* For building on OS X, gfx/gl/osx/gfxGLDevice.mac.mm must be included in the project manually
 
 MIT Licensed Open Source version of [Torque 3D](http://torque3d.org) from [GarageGames](http://www.garagegames.com)
 
@@ -11,6 +11,7 @@ MIT Licensed Open Source version of [Torque 3D](http://torque3d.org) from [Garag
 
 * Follow instructions on the [wiki](http://wiki.torque3d.org/coder:physx-setup)
 * Enable preprocessor definitions TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED
+* PhysX 3.3.2 for Windows only supports up to vc11.0 (Visual Studio 2012). This can be changed in Properties -> Configuration Properties -> General -> Platform Toolset. This also requires the preprocessor flag _VARIADIC_MAX=10.
 
 ## More Information
 
