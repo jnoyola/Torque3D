@@ -205,3 +205,5 @@ cache..png
 cachemonaco.png
 moncachemoney.png
 Templates/Full/game/Full.app
+*.nsh
+*.nlf

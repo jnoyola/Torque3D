@@ -7,6 +7,11 @@ For building on OS X, gfx/gl/osx/gfxGLDevice.mac.mm must be included in the proj
 
 MIT Licensed Open Source version of [Torque 3D](http://torque3d.org) from [GarageGames](http://www.garagegames.com)
 
+## PhysX
+
+* Follow instructions on the [wiki](http://wiki.torque3d.org/coder:physx-setup)
+* Enable preprocessor definitions TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED
+
 ## More Information
 
 * [Homepage](http://torque3d.org)
