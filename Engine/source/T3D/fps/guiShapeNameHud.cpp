@@ -117,8 +117,11 @@ GuiShapeNameHud::GuiShapeNameHud()
 {
    mFillColor.set( 0.25f, 0.25f, 0.25f, 0.25f );
    mFrameColor.set( 0, 1, 0, 1 );
+   mLabelFillColor.set( 0.25f, 0.25f, 0.25f, 0.25f );
+   mLabelFrameColor.set( 0, 1, 0, 1 );
    mTextColor.set( 0, 1, 0, 1 );
    mShowFrame = mShowFill = true;
+   mShowLabelFrame = mShowLabelFill = false;
    mVerticalOffset = 0.5f;
    mDistanceFade = 0.1f;
    mLabelPadding.set(0, 0);
@@ -193,7 +196,7 @@ void GuiShapeNameHud::onRender( Point2I, const RectI &updateRect)
 
    // Collision info. We're going to be running LOS tests and we
    // don't want to collide with the control object.
-   static U32 losMask = TerrainObjectType | ShapeBaseObjectType;
+   static U32 losMask = TerrainObjectType | ShapeBaseObjectType | StaticObjectType;
    control->disableCollision();
 
    // All ghosted objects are added to the server connection group,
