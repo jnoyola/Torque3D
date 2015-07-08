@@ -71,6 +71,7 @@ local.properties
 *.lib
 *.exp
 *.exe
+*.a
 
 
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
@@ -205,3 +206,4 @@ cache..png
 cachemonaco.png
 moncachemoney.png
 Templates/Full/game/Full.app
+Engine/lib/physx/

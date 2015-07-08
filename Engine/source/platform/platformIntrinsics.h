@@ -41,11 +41,11 @@ template< typename T >
 inline bool dCompareAndSwap( T* volatile& refPtr, T* oldPtr, T* newPtr )
 {
 // TODO: see if i can remove the LLVM check since we are now using uintptr_t - JTH [2/7/15]
-#ifdef __llvm__
-    return dCompareAndSwap(*reinterpret_cast<volatile U32*>(&refPtr), (U32)oldPtr, (U32)newPtr);
-#else
+//#ifdef __llvm__
+//    return dCompareAndSwap(*reinterpret_cast<volatile U32*>(&refPtr), (U32)oldPtr, (U32)newPtr);
+//#else
    return dCompareAndSwap( *reinterpret_cast< volatile uintptr_t* >( &refPtr ), ( uintptr_t ) oldPtr, ( uintptr_t ) newPtr );
-#endif
+//#endif
 }
 
 // Test-And-Set
