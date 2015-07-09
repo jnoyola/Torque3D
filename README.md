@@ -15,9 +15,9 @@ MIT Licensed Open Source version of [Torque 3D](http://torque3d.org) from [Garag
     3. PhysX 3.3.2 for Windows only supports up to vc11.0 (requiring Visual Studio 2012). This can be changed in Properties -> Configuration Properties -> General -> Platform Toolset. This also requires the preprocessor flag _VARIADIC_MAX=10.
 * OS X
     1. Follow instructions on the [wiki](http://wiki.torque3d.org/coder:physx-setup) up to step 2.4
-    2. Add the path to the PhysX Include directory to Header Search Paths for <Project> Bundle.xcodeproj and set it to recursive
-    3. Add the necessary libs for step 2.7. to <Project> Bundle.xcodeproj/Dependecies/builtLibs
-    4. Add the preprocessor definitions for step 2.8. as well as TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED to <Project> Bundle.xcodeproj
+    2. Add the path to the PhysX Include directory to Header Search Paths for Bundle.xcodeproj and set it to recursive
+    3. Add the preprocessor definitions for step 2.8. (_DEBUG, NDEBUG) as well as TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED to Bundle.xcodeproj
+    4. Add the necessary libs for step 2.7. to Bundle.xcodeproj/Dependecies/builtLibs
 
 ## More Information
 
