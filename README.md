@@ -3,15 +3,21 @@
 Recast, Navigation Meshes, and the related parts of AIPlayer have been removed for compatibility.
 
 * For building on Windows, TORQUE_NAVIGATION_ENABLED must be removed from the preprocessor definitions list (Options -> Configuration Properties -> C/C++ -> Preprocessor -> Preprocessor Definitions)
-* For building on OS X, gfx/gl/osx/gfxGLDevice.mac.mm must be included in the project manually
+* For building on OS X, gfx/gl/osx/gfxGLDevice.mac.mm and gui/core/guiOffscreenCanvas.ccp/h must be included in the project manually
 
 MIT Licensed Open Source version of [Torque 3D](http://torque3d.org) from [GarageGames](http://www.garagegames.com)
 
 ## PhysX
 
-* Follow instructions on the [wiki](http://wiki.torque3d.org/coder:physx-setup)
-* Enable preprocessor definitions TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED
-* PhysX 3.3.2 for Windows only supports up to vc11.0 (Visual Studio 2012). This can be changed in Properties -> Configuration Properties -> General -> Platform Toolset. This also requires the preprocessor flag _VARIADIC_MAX=10.
+* Windows
+    1. Follow instructions on the [wiki](http://wiki.torque3d.org/coder:physx-setup)
+    2. Enable preprocessor definitions TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED
+    3. PhysX 3.3.2 for Windows only supports up to vc11.0 (requiring Visual Studio 2012). This can be changed in Properties -> Configuration Properties -> General -> Platform Toolset. This also requires the preprocessor flag _VARIADIC_MAX=10.
+* OS X
+    1. Follow instructions on the [wiki](http://wiki.torque3d.org/coder:physx-setup) up to step 2.4
+    2. Add the path to the PhysX Include directory to Header Search Paths for Bundle.xcodeproj and set it to recursive
+    3. Add the preprocessor definitions for step 2.8. (_DEBUG, NDEBUG) as well as TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED to Bundle.xcodeproj
+    4. Add the necessary libs for step 2.7. to Bundle.xcodeproj/Dependecies/builtLibs
 
 ## More Information
 
