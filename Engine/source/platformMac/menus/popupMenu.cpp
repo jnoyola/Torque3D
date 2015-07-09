@@ -379,7 +379,8 @@ bool PopupMenu::handleSelect(U32 command, const char *text /* = NULL */)
    }
    
    // [tom, 8/20/2006] Wasn't handled by a submenu, pass off to script
-   return dAtob(Con::executef(this, "onSelectItem", Con::getIntArg(pos - 1), text ? text : ""));
+   //return dAtob(Con::executef(this, "onSelectItem", Con::getIntArg(pos - 1), text ? text : ""));
+   return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
