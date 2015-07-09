@@ -17,7 +17,10 @@ MIT Licensed Open Source version of [Torque 3D](http://torque3d.org) from [Garag
     1. Follow instructions on the [wiki](http://wiki.torque3d.org/coder:physx-setup) up to step 2.4
     2. Add the path to the PhysX Include directory to Header Search Paths for Bundle.xcodeproj and set it to recursive
     3. Add the preprocessor definitions for step 2.8. (_DEBUG, NDEBUG) as well as TORQUE_PHYSICS_PHYSX3 and TORQUE_PHYSICS_ENABLED to Bundle.xcodeproj
-    4. Add the necessary libs for step 2.7. to Bundle.xcodeproj/Dependecies/builtLibs
+    4. Add all libs (either checked or release) to Bundle.xcodeproj/Dependecies/builtLibs
+    5. Changes to physx/Include/extensions/PxDefaultErrorCallback.h (only LLVM seems to require these)
+        * 53: virtual ~PxDefaultErrorCallback() {};
+        * 55: [...] = 0;
 
 ## More Information
 
