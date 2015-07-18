@@ -211,6 +211,7 @@ is acceptable.  Do NOT use for cryptographic purposes.
 --------------------------------------------------------------------
 */
 
+__attribute__((optnone))
 U64 hash64( register const U8 *k, register U32 length, register U64 initval )
 {
   register U64 a,b,c,len;
